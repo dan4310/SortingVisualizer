@@ -8,6 +8,7 @@ export const ParametersProvider = (props) => {
     const [algo, setAlgo] = useState('null');
     const [array, setArray] = useState([]);
     const [isSorting, setIsSorting] = useState(false);
+    const T = 10*(2000/(bins*bins));
 
     useEffect(() => {
         getNewArray();
@@ -17,6 +18,16 @@ export const ParametersProvider = (props) => {
         var temp = a[j];
         a[j] = a[i];
         a[i] = temp;
+    }
+
+    function isSorted(arr) {
+        for (var i = 0; i < arr.length-1; i++) {
+            if (arr[i].value > arr[i+1].value) {
+                return false;
+            }
+        }
+        console.log(arr);
+        return true;
     }
 
     
@@ -32,22 +43,25 @@ export const ParametersProvider = (props) => {
     }
 
     const bubbleSort = () => {
-        const T = 10*(2000/(bins*bins));
-        setIsSorting(true);
         var arr = [...array];
+        if (isSorted(arr)) {
+            return;
+        }
+
+        setIsSorting(true);
         var animations = [];
 
         for (var i = 0; i < arr.length; i++) {
-            for (var j = 0; j < arr.length-1; j++) {
+            for (var j = 0; j < arr.length-1-i; j++) {
                 const animation = {};
-
+                animation.comparison = [j, j+1];
                 if (arr[j].value > arr[j+1].value) {
-                    animation.comparison = [j, j+1];
                     animation.swap = [j, j+1];
-                    animations.push(animation);
                     swap(arr, j, j+1);
+                } else {
+                    animation.swap = [j,j];
                 }
-
+                animations.push(animation);
             }
         }
 
@@ -87,71 +101,89 @@ export const ParametersProvider = (props) => {
 
     const quickSort = () => {
         var arr = [...array];
+        if (isSorted(arr)) {
+            return;
+        }
+
         setIsSorting(true);
+        var animations = [];
 
+        qs(arr, 0, arr.length - 1);
 
-        qs(arr, 0, arr.length-1);
-        setArray(arr);
+        const newAnimations = [];
+        for (const animation of animations) {
+            newAnimations.push(animation.comparison);
+            newAnimations.push(animation.comparison);
+            newAnimations.push(animation.swap);
+        }
+        var currPiv = newAnimations[0][2];
+        for (var i = 0; i < newAnimations.length; i++) {
+            const [ind1, ind2, pivInd] = newAnimations[i];
+            const isColorChange = i % 3 !== 2;
+            if (isColorChange) {
+                const color = i % 3 === 0 ? 'red' : 'blue';
+                setTimeout(() => {
+                    const arrayBars = document.getElementsByClassName('array-bar');
+                    if (pivInd !== currPiv) {
+                        arrayBars[currPiv].style.backgroundColor = 'blue';
+                        currPiv = pivInd;
+                    }
+                    arrayBars[pivInd].style.backgroundColor = 'orange';
+                    arrayBars[ind1].style.backgroundColor = color;
+                    arrayBars[ind2].style.backgroundColor = color;
+                    
+                }, T*i) ;
+                
+            } else {
+                setTimeout(() => {
+                    const arrayBars = document.getElementsByClassName('array-bar');
+                    var tempHeight = arrayBars[ind1].style.height;
+                    arrayBars[ind1].style.height = arrayBars[ind2].style.height;
+                    arrayBars[ind2].style.height = tempHeight; 
+                }, T*i);
+            }
 
-        function qs(a, low, high) {            
-            
+            setTimeout(() => {
+                const arrayBars = document.getElementsByClassName('array-bar');
+                arrayBars[currPiv].style.backgroundColor = 'blue';
+                setIsSorting(false);
+                setArray(arr);
+            }, T*newAnimations.length+100);
+        }
+
+        function qs(array, low, high) {
             if (low < high) {
-                var pi = partition(a, low, high);
-                qs(a, low, pi-1);
-                qs(a, pi+1, high);
-
+                var pi = partition(array, low, high);
+                qs(array, low, pi-1);
+                qs(array, pi+1, high);
             }
-        }
+        }  
+        
+        function partition(array, low, high) {
+            var pivot = array[high];
+            var i = low-1;
 
-        function swap(i, j) {
-            var temp = arr[i];
-            arr[i] = arr[j];
-            arr[j] = temp;
-        }
-
-        function partition(arr, l, h) {
-            var pivot = arr[h];
-            var i = (l - 1);
-            var j = l;
-
-            for (var j = l; j <= h-1; j++) {
-                if (arr[j] < pivot) {
+            for (var j = low; j <= high-1; j++) {
+                const animation = {};
+                animation.comparison = [i+1,j, high];
+                if (array[j].value < pivot.value) {
                     i++;
-                    swap(i,j);
-                    setArray(arr);
+                    animation.swap = [i,j, high];
+                    swap(array, i, j);
+                    
+                } else {
+                    animation.swap = [j,j, high];
                 }
+                animations.push(animation);
             }
-            
-            function helper() {
-                if (arr[j] < pivot) {
-                    i++;
-                    swap(i,j);
-                    setArray(arr);
-                }
-                if (j > h-1) {
-                    setIsSorting(false);
-                }
-                j++;
-            }
-            
-
-            swap(h,i+1);
-            setArray(arr);
+            const animation = {};
+            animation.comparison = [i+1, high, high];
+            animation.swap = [i+1, high, high];
+            swap(array, i+1, high);
+            animations.push(animation);
             return (i+1);
-            
         }
     };
-
-    function isSorted(arr) {
-        var sorted = true;
-        for (var i = 0; i < arr.length-1; i++) {
-            if (arr[i] > arr[i+1]) {
-                sorted = false;
-                break;
-            }
-        }
-        return sorted;
-    }
 
     return(
         <ParametersContext.Provider value={{
