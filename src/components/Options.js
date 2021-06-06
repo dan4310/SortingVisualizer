@@ -1,11 +1,11 @@
-import React from 'react';
+import React , { useContext     } from 'react';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Slider from './Slider';
 import GenerateArray from './GenerateArray';
 import AlgoOptions from './AlgoOptions';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Options = () => {
     const classes = useStyles();
+
 
     return (
         <Box component='span' className={classes.root}>

@@ -15,10 +15,11 @@ const useStyles = makeStyles((theme) => ({
 
 const GenerateArray = () => {
     const classes = useStyles();
-    const {newArray, bubbleSort} = useContext(ParametersContext);
+    const {newArray, isSorting} = useContext(ParametersContext);
 
     return (
-        <Button variant='contained' className={classes.btn}
+        
+        <Button variant={isSorting ? 'disabled' : 'contained'} className={classes.btn}
             color='primary'
             onClick={() => {
                 newArray();

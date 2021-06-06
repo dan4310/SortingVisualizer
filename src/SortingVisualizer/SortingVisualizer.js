@@ -1,7 +1,7 @@
 import React from 'react';
 import AppBar from '../components/AppBar';
 import Options from '../components/Options';
-import SortingDisplay from '../components/SortingDisplay';
+import SortingDisplay from '../components/SortingDisplay/SortingDisplay';
 
 import {ParametersProvider} from '../context/ParametersContext';
 

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const AlgoOptions = () => {
     const classes = useStyles();
 
-    const {algo, setAlgo, bubbleSort, isSorting} = useContext(ParametersContext);
+    const {algo, setAlgo, bubble, isSorting, quickSort} = useContext(ParametersContext);
 
     return (
         <Grid container className={classes.grid} spacing={2}>
@@ -32,8 +32,15 @@ const AlgoOptions = () => {
                                 color={(isSorting && algo === a) ? 'secondary' : 'default'}
                                 onClick={() => {
                                     setAlgo(a);
-                                    bubbleSort();
-                                    bubbleSort()
+                                    switch (a) {
+                                        case 'Bubble Sort':
+                                            bubble();
+                                            break;
+                                        case 'Quick Sort':
+                                            quickSort();
+                                            break
+                                    }
+                                          
                                 }}
                             >
                                 <Typography variant='caption'>

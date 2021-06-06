@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -15,10 +15,12 @@ const useStyles = makeStyles({
 
 export default function ContinuousSlider() {
   const classes = useStyles();
-  const {bins, setBins} = useContext(ParametersContext);
+  const [val, setVal] = useState(30);
+  const {bins, setBins, isSorting} = useContext(ParametersContext);
 
   const handleChange = (event, newValue) => {
-    setBins(newValue);
+    setVal(newValue);
+    setBins(newValue*3);
   };
 
   return (
@@ -32,7 +34,13 @@ export default function ContinuousSlider() {
         </Grid>
 
         <Grid item xs>
-          <Slider value={bins} onChange={handleChange} aria-labelledby="continuous-slider" />
+          {
+            isSorting ?
+              <Slider value={val} disabled onChange={handleChange} aria-labelledby="continuous-slider" />
+            :
+            <Slider value={val} onChange={handleChange} aria-labelledby="continuous-slider" />
+          }
+          
         </Grid>
 
         <Grid item>

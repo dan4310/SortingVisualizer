@@ -1,0 +1,15 @@
+.array-container {
+  position: absolute;
+  top: auto;
+  height: calc(90vh - 50px);
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.array-bar {
+  width: 2px;
+  background-color: blue;
+  display: inline-block;
+  margin: 0 1px;
+}
