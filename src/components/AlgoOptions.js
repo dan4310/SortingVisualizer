@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 const AlgoOptions = () => {
     const classes = useStyles();
 
-    const {algo, setAlgo, bubble, isSorting, quickSort} = useContext(ParametersContext);
+    const {algo, setAlgo, bubble, isSorting, quickSort, mergeSort} = useContext(ParametersContext);
 
     return (
         <Grid container className={classes.grid} spacing={2}>
@@ -38,7 +38,10 @@ const AlgoOptions = () => {
                                             break;
                                         case 'Quick Sort':
                                             quickSort();
-                                            break
+                                            break;
+                                        case 'Merge Sort':
+                                            mergeSort();
+                                            break;
                                     }
                                           
                                 }}

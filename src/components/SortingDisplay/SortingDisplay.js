@@ -3,7 +3,7 @@ import { ParametersContext } from '../../context/ParametersContext';
 import './SortingDisplay.css';
 
 const SortingDisplay = () => {
-    const {array, bins} = useContext(ParametersContext);
+    const {array, bins} = useContext(ParametersContext);   
     
     return (
         <div className='array-container'>

@@ -18,7 +18,7 @@ const GenerateArray = () => {
     const {newArray, isSorting} = useContext(ParametersContext);
 
     return (
-        
+        !isSorting &&
         <Button variant={isSorting ? 'disabled' : 'contained'} className={classes.btn}
             color='primary'
             onClick={() => {

@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Slider from './Slider';
 import GenerateArray from './GenerateArray';
 import AlgoOptions from './AlgoOptions';
+import ClockSpeed from './ClockSpeed';
+import Cancel from './Cancel';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,8 +33,17 @@ const Options = () => {
                 spacing= {5}
                 xs={12}
             >
+
+                <Grid item>
+                    <Cancel className={classes.item} />
+                </Grid>
+
                 <Grid item>
                     <GenerateArray className={classes.item}/>
+                </Grid>
+
+                <Grid item>
+                    <ClockSpeed className={classes.item}/>
                 </Grid>
 
                 <Grid item>
@@ -43,8 +54,7 @@ const Options = () => {
                     <AlgoOptions className={classes.item}/>
                 </Grid>
                 
-            </Grid>
-            
+            </Grid> 
         </Box>
     )
 }
