@@ -22,9 +22,6 @@ export default function DenseAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
           <Typography variant="h6" color="inherit">
             Sorting Algorithm Visualizer
           </Typography>

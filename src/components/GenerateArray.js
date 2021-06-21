@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const GenerateArray = () => {
     const classes = useStyles();
-    const {newArray, isSorting} = useContext(ParametersContext);
+    const {newArray, isSorting, setPerformance} = useContext(ParametersContext);
 
     return (
         !isSorting &&
@@ -23,6 +23,7 @@ const GenerateArray = () => {
             color='primary'
             onClick={() => {
                 newArray();
+                setPerformance(-1);
             }}
         >
             <Typography variant='subtitle2'>

@@ -10,6 +10,7 @@ export const ParametersProvider = (props) => {
     const [array, setArray] = useState([]);
     const [speed, setSpeed] = useState(100);
     const [isSorting, setIsSorting] = useState(false);
+    const [functionPerformance, setPerformance] = useState(-1);
 
     const T = 1000 * (1/(bins*bins)) * speed;
     
@@ -56,6 +57,8 @@ export const ParametersProvider = (props) => {
         setIsSorting(true);
         var animations = [];
 
+        var t0 = performance.now();
+
         for (var i = 0; i < arr.length; i++) {
             for (var j = 0; j < arr.length-1-i; j++) {
                 const animation = {};
@@ -69,6 +72,9 @@ export const ParametersProvider = (props) => {
                 animations.push(animation);
             }
         }
+
+        var t1 = performance.now();
+        setPerformance(t1-t0);
 
         const newAnimations = [];
         for (const animation of animations) {
@@ -113,8 +119,10 @@ export const ParametersProvider = (props) => {
 
         setIsSorting(true);
         var animations = [];
-
+        var t0 = performance.now();
         qs(arr, 0, arr.length - 1);
+        var t1 = performance.now();
+        setPerformance(t1-t0);
 
         const newAnimations = [];
         for (const animation of animations) {
@@ -198,7 +206,10 @@ export const ParametersProvider = (props) => {
         if (isSorted(arr)) return;
         setIsSorting(true);
 
+        var t0 = performance.now();
         const animations = Algos.mergeSort(arr);
+        var t1 = performance.now();
+        setPerformance(t1-t0);
         const newAnimations = [];
         for (const animation of animations) {
             newAnimations.push(animation.comparison);
@@ -233,7 +244,100 @@ export const ParametersProvider = (props) => {
         }, T*newAnimations.length);
         
         
-    } 
+    }
+
+    /* ----------------- Heap Sort Algo -------------------*/
+
+    const heapSortAlgo = () => {
+
+        var arr = [...array];
+        if (isSorted(arr)) return;
+        setIsSorting(true);
+
+        const animations = [];
+        var t0 = performance.now();
+        sort(arr);
+        var t1 = performance.now();
+        setPerformance(t1-t0);
+        const newAnimations = [];
+        for (const animation of animations) {
+            newAnimations.push(animation.comparison);
+            newAnimations.push(animation.comparison);
+            newAnimations.push(animation.swap);
+        }
+        for (var i = 0; i < newAnimations.length; i++) {
+            const [ind1, ind2] = newAnimations[i];
+            const isColorChange = i % 3 !== 2;
+            if (isColorChange) {
+                const color = i % 3 === 0 ? 'red' : 'blue';
+                var id = setTimeout(() => {
+                    const arrayBars = document.getElementsByClassName('array-bar');
+                    arrayBars[ind1].style.backgroundColor = color;
+                    arrayBars[ind2].style.backgroundColor = color;
+                }, T*i) 
+                
+            } else {
+                var id = setTimeout(() => {
+                    const arrayBars = document.getElementsByClassName('array-bar');
+                    var tempHeight = arrayBars[ind1].style.height;
+                    arrayBars[ind1].style.height = arrayBars[ind2].style.height;
+                    arrayBars[ind2].style.height = tempHeight;
+                }, T*i)
+            }
+        }  
+        setTimeout(() => {
+            setArray(arr);
+            setIsSorting(false);
+        }, T*newAnimations.length)
+
+
+
+        function sort( arr)
+    {
+        var n = arr.length;
+ 
+        for (var i = n / 2 - 1; i >= 0; i--)
+            heap(arr, n, i);
+ 
+        for (var i = n - 1; i > 0; i--) {
+            animations.push({
+                comparison: [0,i],
+                swap: [0,i]
+            })
+            var temp = arr[0];
+            arr[0] = arr[i];
+            arr[i] = temp;
+ 
+            heap(arr, i, 0);
+        }
+    }
+
+    function heap(arr, n, i)
+    {
+        var largest = i;
+        var l = 2 * i + 1;
+        var r = 2 * i + 2;
+ 
+        if (l < n && arr[l].value > arr[largest].value)
+            largest = l;
+ 
+        if (r < n && arr[r].value > arr[largest].value)
+            largest = r;
+ 
+        if (largest != i) {
+            animations.push({
+                comparison: [i,largest], 
+                swap: [i,largest]
+            });
+            var swap = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = swap;
+ 
+            heap(arr, n, largest);
+        }
+    }
+ 
+    }
 
     return(
         <ParametersContext.Provider value={{
@@ -251,6 +355,9 @@ export const ParametersProvider = (props) => {
             mergeSort: mergeSortAlgo,
             speed,
             setSpeed,
+            heapSort: heapSortAlgo,
+            functionPerformance,
+            setPerformance
         }}>
             {props.children}
         </ParametersContext.Provider>
