@@ -297,7 +297,7 @@ export const ParametersProvider = (props) => {
         var n = arr.length;
  
         for (var i = n / 2 - 1; i >= 0; i--)
-            heap(arr, n, i);
+            heap(arr, n, Math.ceil(i));
  
         for (var i = n - 1; i > 0; i--) {
             animations.push({
@@ -317,7 +317,6 @@ export const ParametersProvider = (props) => {
         var largest = i;
         var l = 2 * i + 1;
         var r = 2 * i + 2;
- 
         if (l < n && arr[l].value > arr[largest].value)
             largest = l;
  
